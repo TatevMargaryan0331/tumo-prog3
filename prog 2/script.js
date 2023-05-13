@@ -23,17 +23,17 @@ var HunterArr = [];
 
 function kerparner(qanak, kerpar) {
     var a = 0;
-    while (a<qanak) {
-        var x = Math.floor(random(0,m))
-        var y = Math.floor(random(0,n))
-        
+    while (a < qanak) {
+        var x = Math.floor(random(0, m))
+        var y = Math.floor(random(0, n))
+
         if (matrix[y][x] == 0) {
             matrix[y][x] = kerpar;
         }
         else {
-            var x = Math.floor(random(0,m))
-            var y = Math.floor(random(0,n))
-         
+            var x = Math.floor(random(0, m))
+            var y = Math.floor(random(0, n))
+
             matrix[y][x] = kerpar;
         }
         a++;
@@ -56,7 +56,7 @@ function setup() {
     kerparner(100, 3);
     kerparner(100, 4);
     kerparner(100, 5);
-    
+
     frameRate(5);
     createCanvas(matrix[0].length * side, matrix.length * side);
     background('#acacac');
