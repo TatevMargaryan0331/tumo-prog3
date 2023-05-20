@@ -118,7 +118,7 @@ function draw() {
             // fill("blue")
             // text(x + " " + y, x * side + side / 2, y * side + side / 2)
         }
-    }
+    }   //client
 
     for (var i in grassArr) {
         grassArr[i].mul();
@@ -138,6 +138,6 @@ function draw() {
 
     for (var i in HunterArr) {
         HunterArr[i].kill();
-    }
+    }  //server
 
 }
