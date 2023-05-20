@@ -110,8 +110,9 @@
 //         }
 //     }
 // }
+var LivingCreature = require("./livingCreature")
 
-class GrassEater extends LivingCreature {
+module.exports = class GrassEater extends LivingCreature {
 
     constructor(x, y, index) {
 

@@ -21,41 +21,11 @@ var OmnivoreArr = [];
 var OmnivoreEaterArr = [];
 var HunterArr = [];
 
-function kerparner(qanak, kerpar) {
-    var a = 0;
-    while (a < qanak) {
-        var x = Math.floor(random(0, m))
-        var y = Math.floor(random(0, n))
-
-        if (matrix[y][x] == 0) {
-            matrix[y][x] = kerpar;
-        }
-        else {
-            var x = Math.floor(random(0, m))
-            var y = Math.floor(random(0, n))
-
-            matrix[y][x] = kerpar;
-        }
-        a++;
-    }
-}
 
 
 function setup() {
 
 
-    for (let i = 0; i < n; i++) {
-        matrix[i] = []
-        for (let j = 0; j < m; j++) {
-            matrix[i].push(0)
-        }
-    }
-
-    kerparner(100, 1);
-    kerparner(300, 2);
-    kerparner(100, 3);
-    kerparner(100, 4);
-    kerparner(100, 5);
 
     frameRate(5);
     createCanvas(matrix[0].length * side, matrix.length * side);

@@ -111,8 +111,9 @@
 
 
 // }
+var LivingCreature = require("./livingCreature")
 
-class OmnivoreEater extends LivingCreature {
+module.exports = class OmnivoreEater extends LivingCreature {
 
     constructor(x, y, index) {
 

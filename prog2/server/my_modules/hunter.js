@@ -160,8 +160,8 @@
 
 
 // }
-
-class Hunter extends LivingCreature {
+var LivingCreature = require("./livingCreature")
+module.exports = class Hunter extends LivingCreature {
 
     constructor(x, y, index) {
 
