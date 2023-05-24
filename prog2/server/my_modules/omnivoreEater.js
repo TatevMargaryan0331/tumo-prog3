@@ -1,4 +1,5 @@
 var LivingCreature = require("./livingCreature")
+const {random} = require("./helpers");
 
 module.exports = class OmnivoreEater extends LivingCreature {
 
@@ -44,7 +45,7 @@ module.exports = class OmnivoreEater extends LivingCreature {
     eat() {
 
         let foods = this.chooseCell(3)
-        let food = random(foods)
+        let food = foods[random(foods)]
         if (food) {
             this.energy++
             matrix[this.y][this.x] = 0
@@ -71,7 +72,8 @@ module.exports = class OmnivoreEater extends LivingCreature {
     move() {
 
         this.energy--;
-        var newCell = random(this.chooseCell(0));
+        var newCells = this.chooseCell(0);
+        var newCell= newCells[random(newCells)];
 
         if (newCell) {
             matrix[this.y][this.x] = 0;
@@ -85,7 +87,8 @@ module.exports = class OmnivoreEater extends LivingCreature {
     }
 
     mul() {
-        var newCell = random(this.chooseCell(0));
+        var newCells = this.chooseCell(0);
+        var newCell= newCells[random(newCells)];
         if (newCell) {
             var newOmnivoreEater = new OmnivoreEater(newCell[0], newCell[1], this.index);
             OmnivoreEaterArr.push(newOmnivoreEater);

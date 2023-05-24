@@ -1,5 +1,10 @@
 var express = require("express");
 var app = express();
+Grass = require("./my_modules/grass");
+GrassEater = require("./my_modules/grassEater");
+Hunter = require("./my_modules/hunter");
+Omnivore = require("./my_modules/omnivore");
+OmnivoreEater = require("./my_modules/omnivoreEater");
 
 app.use(express.static("../client"));
 app.get("/", function (req, res) {
@@ -9,18 +14,10 @@ app.get("/", function (req, res) {
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-server.listen(3000, function () {
-    console.log("Game is running on port 3000");
-});
 
 matrix = [];
 n = 50;
 m = 50;
-Grass = require("./my_modules/grass");
-GrassEater = require("./my_modules/grassEater");
-Hunter = require("./my_modules/hunter");
-Omnivore = require("./my_modules/omnivore");
-OmnivoreEater = require("./my_modules/omnivoreEater");
 grassArr = [];
 grassEaterArr = [];
 OmnivoreArr = [];
@@ -93,25 +90,25 @@ function creatObjects() {
 
 function StartGame(){
 
-    // for (var i in grassArr) {
-    //     grassArr[i].mul();
-    // }
+     for (var i in grassArr) {
+         grassArr[i].mul();
+     }
 
-    // for (var i in grassEaterArr) {
-    //     grassEaterArr[i].eat();
-    // }
+     for (var i in grassEaterArr) {
+         grassEaterArr[i].eat();
+     }
 
-    // for (var i in OmnivoreArr) {
-    //     OmnivoreArr[i].eat();
-    // }
+     for (var i in OmnivoreArr) {
+         OmnivoreArr[i].eat();
+     }
 
-    // for (var i in OmnivoreEaterArr) {
-    //     OmnivoreEaterArr[i].eat();
-    // }
+     for (var i in OmnivoreEaterArr) {
+         OmnivoreEaterArr[i].eat();
+     }
 
-    // for (var i in HunterArr) {
-    //     HunterArr[i].kill();
-    // } 
+     for (var i in HunterArr) {
+         HunterArr[i].kill();
+     }
 
     io.sockets.emit("my_matrix", matrix);
 
@@ -123,4 +120,8 @@ setInterval(StartGame, 1000);
 
 io.on('connection', function (socket) {
     socket.emit("my_matrix", matrix);
+});
+
+server.listen(3000, function () {
+    console.log("Game is running on port 3000");
 });

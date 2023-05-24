@@ -1,4 +1,5 @@
 var LivingCreature = require("./livingCreature")
+const {random} = require("./helpers");
 
 module.exports = class Hunter extends LivingCreature {
 
@@ -62,7 +63,7 @@ module.exports = class Hunter extends LivingCreature {
     kill() {
 
         let foods = this.chooseFood()
-        let food = random(foods)
+        let food = foods[random(foods)]
         if (food) {
             this.multiply++
             matrix[this.y][this.x] = 0
@@ -135,7 +136,8 @@ module.exports = class Hunter extends LivingCreature {
     }
 
     mul() {
-        var newCell = random(this.chooseCell(0));
+        var newCells = this.chooseCell(0);
+        var newCell= newCells[random(newCells)];
         if (newCell) {
             var newHunter = new Hunter(newCell[0], newCell[1], this.index);
             HunterArr.push(newHunter);
