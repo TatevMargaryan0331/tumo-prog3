@@ -3,10 +3,11 @@ const {random} = require("./helpers");
 
 module.exports = class Omnivore extends LivingCreature {
 
-    constructor(x, y, index) {
+    constructor(x, y, index, gender) {
 
         super(x, y, index);
         this.energy = 8;
+        this.gender = gender;
 
     }
 
@@ -47,7 +48,7 @@ module.exports = class Omnivore extends LivingCreature {
 
         let foods = this.chooseCell(2)
         let food = foods[random(foods)]
-        if (food) {
+        if (food != undefined) {
             this.energy++
             matrix[this.y][this.x] = 0
             let newX = food[0]
@@ -61,7 +62,10 @@ module.exports = class Omnivore extends LivingCreature {
                     break;
                 }
             }
-            if (this.energy >= 10) {
+            if (this.energy >= 8 && this.gender == "male") {
+                this.mul()
+            }
+            else if(this.energy >= 10 && this.gender == "female"){
                 this.mul()
             }
         }
@@ -76,7 +80,7 @@ module.exports = class Omnivore extends LivingCreature {
         var newCells = this.chooseCell(0);
         var newCell= newCells[random(newCells)];
 
-        if (newCell) {
+        if (newCell != undefined) {
             matrix[this.y][this.x] = 0;
             matrix[newCell[1]][newCell[0]] = 3;
             this.x = newCell[0];
@@ -90,11 +94,16 @@ module.exports = class Omnivore extends LivingCreature {
     mul() {
         var newCells = this.chooseCell(0);
         var newCell= newCells[random(newCells)];
-        if (newCell) {
+        if (newCell != undefined) {
             var newOmnivore = new Omnivore(newCell[0], newCell[1], this.index);
             OmnivoreArr.push(newOmnivore);
             matrix[newCell[1]][newCell[0]] = 3;
-            this.energy = 8
+            if(gender == "male"){
+                this.energy = 4
+            }
+            else if(gender == "femael"){
+                this.energy = 6
+            }
         }
     }
 

@@ -6,7 +6,7 @@ module.exports = class Hunter extends LivingCreature {
     constructor(x, y, index) {
 
         super(x, y, index);
-        this.energy = 8;
+        this.energy = 5;
 
     }
 
@@ -64,14 +64,14 @@ module.exports = class Hunter extends LivingCreature {
 
         let foods = this.chooseFood()
         let food = foods[random(foods)]
-        if (food) {
+        if (food != undefined) {
             this.multiply++
             matrix[this.y][this.x] = 0
             let newX = food[0]
             let newY = food[1]
             let foodIndex = food[2];
             matrix[food[1]][food[0]] = 5
-            console.log(food);
+            //console.log(food);
             this.x = newX
             this.y = newY
 
@@ -103,18 +103,20 @@ module.exports = class Hunter extends LivingCreature {
     move() {
 
         this.multiply--;
-        var newCell = random(this.chooseCell(0));
+        var newCells = this.chooseCell(0);
+        var newCell = newCells[random(newCells)];
 
-        if (newCell) {
+        if (newCell != undefined) {
             matrix[this.y][this.x] = 0;
             matrix[newCell[1]][newCell[0]] = 5;
             this.x = newCell[0];
             this.y = newCell[1];
         }
         else {
-            var newCell = random(this.chooseCell(1));
-
-            if (newCell) {
+            var newCells = this.chooseCell(1);
+            var newCell = newCells[random(newCells)];
+    
+            if (newCell != undefined) {
                 this.multiply++
                 matrix[this.y][this.x] = 1
                 let newX = newCell[0]
@@ -138,7 +140,7 @@ module.exports = class Hunter extends LivingCreature {
     mul() {
         var newCells = this.chooseCell(0);
         var newCell= newCells[random(newCells)];
-        if (newCell) {
+        if (newCell != undefined) {
             var newHunter = new Hunter(newCell[0], newCell[1], this.index);
             HunterArr.push(newHunter);
             matrix[newCell[1]][newCell[0]] = 5;

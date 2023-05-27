@@ -1,10 +1,13 @@
+const { TIMEOUT } = require("dns");
 var express = require("express");
 var app = express();
+Water = require("./my_modules/water");
 Grass = require("./my_modules/grass");
 GrassEater = require("./my_modules/grassEater");
 Hunter = require("./my_modules/hunter");
 Omnivore = require("./my_modules/omnivore");
 OmnivoreEater = require("./my_modules/omnivoreEater");
+
 
 app.use(express.static("../client"));
 app.get("/", function (req, res) {
@@ -18,11 +21,13 @@ var io = require('socket.io')(server);
 matrix = [];
 n = 50;
 m = 50;
+waterArr = [];
 grassArr = [];
 grassEaterArr = [];
 OmnivoreArr = [];
 OmnivoreEaterArr = [];
 HunterArr = [];
+weather = 1;
 
 function kerparner(qanak, kerpar) {
     var a = 0;
@@ -52,11 +57,14 @@ function generateMatrix() {
         }
     }
 
-    kerparner(100, 1);
+    kerparner(400, 1);
     kerparner(300, 2);
-    kerparner(100, 3);
-    kerparner(100, 4);
+    kerparner(200, 3);
+    kerparner(150, 4);
     kerparner(100, 5);
+    kerparner(100, 6);
+    kerparner(200, 3);
+    kerparner(150, 4);
 
 }
 
@@ -72,7 +80,12 @@ function creatObjects() {
                 grassEaterArr.push(grassEater)
             }
             else if (matrix[y][x] == 3) {
-                let omnivore = new Omnivore(x, y, 3);
+                if (OmnivoreArr.length % 2 != 0) {
+                    gender = "male";
+                } else {
+                    gender = "female";
+                }
+                let omnivore = new Omnivore(x, y, 3, gender);
                 OmnivoreArr.push(omnivore)
             }
             else if (matrix[y][x] == 4) {
@@ -88,27 +101,33 @@ function creatObjects() {
 
 }
 
-function StartGame(){
+function StartGame() {
 
-     for (var i in grassArr) {
-         grassArr[i].mul();
-     }
+    for (var i in grassArr) {
+        grassArr[i].mul();
+    }
 
-     for (var i in grassEaterArr) {
-         grassEaterArr[i].eat();
-     }
+    for (var i in grassEaterArr) {
+        grassEaterArr[i].eat();
+    }
 
-     for (var i in OmnivoreArr) {
-         OmnivoreArr[i].eat();
-     }
+    for (var i in OmnivoreArr) {
+        if (weather == 4) {
+            setTimeout(() => {
+                if (OmnivoreArr[i] != undefined) {
+                    OmnivoreArr[i].eat();
+                }
+            }, 3000);
+        }
+    }
 
-     for (var i in OmnivoreEaterArr) {
-         OmnivoreEaterArr[i].eat();
-     }
+    for (var i in OmnivoreEaterArr) {
+        OmnivoreEaterArr[i].eat();
+    }
 
-     for (var i in HunterArr) {
-         HunterArr[i].kill();
-     }
+    for (var i in HunterArr) {
+        HunterArr[i].kill();
+    }
 
     io.sockets.emit("my_matrix", matrix);
 
@@ -117,6 +136,8 @@ function StartGame(){
 generateMatrix();
 creatObjects();
 setInterval(StartGame, 1000);
+setInterval(ChangeWeather, 5000);
+setInterval(Statistic, 5000);
 
 io.on('connection', function (socket) {
     socket.emit("my_matrix", matrix);
@@ -125,3 +146,41 @@ io.on('connection', function (socket) {
 server.listen(3000, function () {
     console.log("Game is running on port 3000");
 });
+
+
+function ChangeWeather() {
+    if (weather == 1) {
+        weather = 2;
+    }
+    else if (weather == 2) {
+        weather = 3;
+    }
+    else if (weather == 3) {
+        weather = 4;
+    }
+    else {
+        weather = 1;
+    }
+    io.sockets.emit("weather", weather);
+}
+
+function Statistic() {
+    statistic = [];
+
+    grassC = grassArr.length;
+    grassEaterC = grassEaterArr.length;
+    omnivoreC = OmnivoreArr.length;
+    omnivoreEaterC = OmnivoreEaterArr.length;
+    hunterC = HunterArr.length;
+    waterC = waterArr.length;
+
+    statistic.push(grassC);
+    statistic.push(grassEaterC);
+    statistic.push(omnivoreC);
+    statistic.push(omnivoreEaterC);
+    statistic.push(hunterC);
+    statistic.push(waterC);
+
+    io.sockets.emit("statistic", statistic);
+
+}
