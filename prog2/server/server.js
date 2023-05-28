@@ -1,5 +1,6 @@
 const { TIMEOUT } = require("dns");
 var express = require("express");
+const fs = require("fs");
 var app = express();
 Water = require("./my_modules/water");
 Grass = require("./my_modules/grass");
@@ -17,7 +18,7 @@ app.get("/", function (req, res) {
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
-
+const statisticFull = [];
 matrix = [];
 n = 50;
 m = 50;
@@ -33,7 +34,7 @@ function kerparner(qanak, kerpar) {
     var a = 0;
     while (a < qanak) {
         var x = Math.floor(Math.random() * m)
-        var y = Math.floor(Math.random() * n) // 
+        var y = Math.floor(Math.random() * n) //
 
         if (matrix[y][x] == 0) {
             matrix[y][x] = kerpar;
@@ -63,38 +64,42 @@ function generateMatrix() {
     kerparner(150, 4);
     kerparner(100, 5);
     kerparner(100, 6);
-    kerparner(200, 3);
-    kerparner(150, 4);
 
 }
 
 function creatObjects() {
     for (var y = 0; y < matrix.length; y++) {
         for (var x = 0; x < matrix[y].length; x++) {
-            if (matrix[y][x] == 1) {
-                let grass = new Grass(x, y, 1);
-                grassArr.push(grass)
-            }
-            else if (matrix[y][x] == 2) {
-                let grassEater = new GrassEater(x, y, 2);
-                grassEaterArr.push(grassEater)
-            }
-            else if (matrix[y][x] == 3) {
-                if (OmnivoreArr.length % 2 != 0) {
-                    gender = "male";
-                } else {
-                    gender = "female";
-                }
-                let omnivore = new Omnivore(x, y, 3, gender);
-                OmnivoreArr.push(omnivore)
-            }
-            else if (matrix[y][x] == 4) {
-                let newOmnivoreEater = new OmnivoreEater(x, y, 4);
-                OmnivoreEaterArr.push(newOmnivoreEater)
-            }
-            else if (matrix[y][x] == 5) {
-                let hunter = new Hunter(x, y, 4);
-                HunterArr.push(hunter)
+            switch (matrix[y][x]) {
+                case 1:
+                    let grass = new Grass(x, y, 1);
+                    grassArr.push(grass)
+                    break;
+                case 2:
+                    let grassEater = new GrassEater(x, y, 2);
+                    grassEaterArr.push(grassEater)
+                    break;
+                case 3:
+                    if (OmnivoreArr.length % 2 !== 0) {
+                        gender = "male";
+                    } else {
+                        gender = "female";
+                    }
+                    let omnivore = new Omnivore(x, y, 3, gender);
+                    OmnivoreArr.push(omnivore)
+                    break;
+                case 4:
+                    let newOmnivoreEater = new OmnivoreEater(x, y, 4);
+                    OmnivoreEaterArr.push(newOmnivoreEater)
+                    break;
+                case 5:
+                    let hunter = new Hunter(x, y, 5);
+                    HunterArr.push(hunter)
+                    break;
+                case 6:
+                    let water = new Water(x, y, 6);
+                    waterArr.push(water)
+                    break;
             }
         }
     }
@@ -103,31 +108,36 @@ function creatObjects() {
 
 function StartGame() {
 
-    for (var i in grassArr) {
+    for (let i in grassArr) {
         grassArr[i].mul();
     }
 
-    for (var i in grassEaterArr) {
+    for (let i in grassEaterArr) {
         grassEaterArr[i].eat();
     }
 
-    for (var i in OmnivoreArr) {
-        if (weather == 4) {
-            setTimeout(() => {
-                if (OmnivoreArr[i] != undefined) {
-                    OmnivoreArr[i].eat();
-                }
-            }, 3000);
+    for (let i in OmnivoreArr) {
+        if (OmnivoreArr[i] !== undefined && weather !== 4) {
+            OmnivoreArr[i].eat();
         }
     }
 
-    for (var i in OmnivoreEaterArr) {
-        OmnivoreEaterArr[i].eat();
+    for (let i in OmnivoreEaterArr) {
+        if (weather !== 4) {
+            OmnivoreEaterArr[i].eat();
+        }
     }
 
-    for (var i in HunterArr) {
+    for (let i in HunterArr) {
         HunterArr[i].kill();
     }
+
+    for (let i in waterArr) {
+        if (weather === 3) {
+            waterArr[i].mul();
+        }
+    }
+
 
     io.sockets.emit("my_matrix", matrix);
 
@@ -135,9 +145,9 @@ function StartGame() {
 
 generateMatrix();
 creatObjects();
+setInterval(Statistic, 1000);
 setInterval(StartGame, 1000);
 setInterval(ChangeWeather, 5000);
-setInterval(Statistic, 5000);
 
 io.on('connection', function (socket) {
     socket.emit("my_matrix", matrix);
@@ -165,22 +175,40 @@ function ChangeWeather() {
 }
 
 function Statistic() {
-    statistic = [];
-
-    grassC = grassArr.length;
-    grassEaterC = grassEaterArr.length;
-    omnivoreC = OmnivoreArr.length;
-    omnivoreEaterC = OmnivoreEaterArr.length;
-    hunterC = HunterArr.length;
-    waterC = waterArr.length;
-
-    statistic.push(grassC);
-    statistic.push(grassEaterC);
-    statistic.push(omnivoreC);
-    statistic.push(omnivoreEaterC);
-    statistic.push(hunterC);
-    statistic.push(waterC);
-
+    const statistic = [
+      {
+        kerpar: "Grass",
+        count: grassArr.length,
+      },
+      {
+        kerpar: "GrassEater",
+        count: grassEaterArr.length,
+      },
+      {
+        kerpar: "Omnivore",
+        count: OmnivoreArr.length,
+      },
+      {
+        kerpar: "OmnivoreEater",
+        count: OmnivoreEaterArr.length,
+      },
+      {
+        kerpar: "Hunter",
+        count: HunterArr.length,
+      },
+      {
+        kerpar: "Water",
+        count: waterArr.length,
+      },
+    ];
+    console.log(statistic);
+    statisticFull.push(statistic);
+    const filePath = __dirname + "/statistics.json";
+    fs.writeFile(filePath, JSON.stringify(statisticFull), "utf-8", (err) => {
+        if (!err) {
+            console.log("Statistic file updated!");
+        }
+    });
     io.sockets.emit("statistic", statistic);
 
 }

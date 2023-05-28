@@ -65,7 +65,12 @@ module.exports = class Hunter extends LivingCreature {
         let foods = this.chooseFood()
         let food = foods[random(foods)]
         if (food != undefined) {
-            this.multiply++
+            if (weather === 3) {
+                this.multiply += 2
+            }
+            else {
+                this.multiply++
+            }
             matrix[this.y][this.x] = 0
             let newX = food[0]
             let newY = food[1]

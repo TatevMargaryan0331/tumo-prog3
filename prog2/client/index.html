@@ -6,8 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        canvas {
+            height: 50%;
+            width: 50%;
+            position: relative;
+            top: 10%;
+            left: 10%;
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -17,6 +27,14 @@
         style="width:300px;height:150px;">
         <h1 id="docWeather" style="color: #59d95f;">Spring</h1>
         <h2 id="StatValue"></h2>
+        <div>
+            <canvas id="grassChart"></canvas>
+            <canvas id="grassEaterChart"></canvas>
+            <canvas id="omnivoreChart"></canvas>
+            <canvas id="omnivoreEaterChart"></canvas>
+            <canvas id="hunterChart"></canvas>
+            <canvas id="waterChart"></canvas>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

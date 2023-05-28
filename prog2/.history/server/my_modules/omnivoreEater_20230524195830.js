@@ -1,36 +1,12 @@
 var LivingCreature = require("./livingCreature")
 const {random} = require("./helpers");
 
-module.exports = class GrassEater extends LivingCreature {
+module.exports = class OmnivoreEater extends LivingCreature {
 
     constructor(x, y, index) {
 
         super(x, y, index);
         this.energy = 8;
-
-    }
-
-    getNewCoordinates() {
-
-        this.directions = [
-
-            [this.x - 1, this.y - 1],
-
-            [this.x, this.y - 1],
-
-            [this.x + 1, this.y - 1],
-
-            [this.x - 1, this.y],
-
-            [this.x + 1, this.y],
-
-            [this.x - 1, this.y + 1],
-
-            [this.x, this.y + 1],
-
-            [this.x + 1, this.y + 1]
-
-        ];
 
     }
 
@@ -41,14 +17,26 @@ module.exports = class GrassEater extends LivingCreature {
         return super.chooseCell(character);
 
     }
+    getNewCoordinates() {
+        this.directions = [
+            [this.x - 1, this.y - 1],
+            [this.x, this.y - 1],
+            [this.x + 1, this.y - 1],
+            [this.x - 1, this.y],
+            [this.x + 1, this.y],
+            [this.x - 1, this.y + 1],
+            [this.x, this.y + 1],
+            [this.x + 1, this.y + 1]
+        ];
+    }
 
     die() {
         console.log("merav");
 
         matrix[this.y][this.x] = 0
-        for (var i in grassEaterArr) {
-            if (this.x == grassEaterArr[i].x && this.y == grassEaterArr[i].y) {
-                grassEaterArr.splice(i, 1);
+        for (var i in OmnivoreEaterArr) {
+            if (this.x == OmnivoreEaterArr[i].x && this.y == OmnivoreEaterArr[i].y) {
+                OmnivoreEaterArr.splice(i, 1);
                 break;
             }
         }
@@ -56,28 +44,23 @@ module.exports = class GrassEater extends LivingCreature {
 
     eat() {
 
-        let foods = this.chooseCell(1)
+        let foods = this.chooseCell(3)
         let food = foods[random(foods)]
-        if (food != undefined) {
-            if (weather === 1 || weather === 3) {
-                this.energy += 2
-            }
-            else {
-                this.energy++
-            }
+        if (food) {
+            this.energy++
             matrix[this.y][this.x] = 0
             let newX = food[0]
             let newY = food[1]
-            matrix[food[1]][food[0]] = 2
+            matrix[food[1]][food[0]] = 4
             this.x = newX
             this.y = newY
-            for (var i in grassArr) {
-                if (newX == grassArr[i].x && newY == grassArr[i].y) {
-                    grassArr.splice(i, 1);
+            for (var i in OmnivoreArr) {
+                if (newX == OmnivoreArr[i].x && newY == OmnivoreArr[i].y) {
+                    OmnivoreArr.splice(i, 1);
                     break;
                 }
             }
-            if (this.energy >= 12) {
+            if (this.energy >= 10) {
                 this.mul()
             }
         }
@@ -90,11 +73,11 @@ module.exports = class GrassEater extends LivingCreature {
 
         this.energy--;
         var newCells = this.chooseCell(0);
-          var newCell= newCells[random(newCells)];
+        var newCell= newCells[random(newCells)];
 
-        if (newCell != undefined) {
+        if (newCell) {
             matrix[this.y][this.x] = 0;
-            matrix[newCell[1]][newCell[0]] = 2;
+            matrix[newCell[1]][newCell[0]] = 4;
             this.x = newCell[0];
             this.y = newCell[1];
         }
@@ -106,12 +89,14 @@ module.exports = class GrassEater extends LivingCreature {
     mul() {
         var newCells = this.chooseCell(0);
         var newCell= newCells[random(newCells)];
-        if (newCell != undefined) {
-            var newGrassEater = new GrassEater(newCell[0], newCell[1], this.index);
-            grassEaterArr.push(newGrassEater);
-            matrix[newCell[1]][newCell[0]] = 2;
+        if (newCell) {
+            var newOmnivoreEater = new OmnivoreEater(newCell[0], newCell[1], this.index);
+            OmnivoreEaterArr.push(newOmnivoreEater);
+            matrix[newCell[1]][newCell[0]] = 4;
             this.energy = 8
         }
     }
 
+
 }
+
