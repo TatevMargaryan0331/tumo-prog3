@@ -133,7 +133,7 @@ function StartGame() {
     }
 
     for (let i in waterArr) {
-        if (weather === 3) {
+        if (weather === 3 || weather === 1) {
             waterArr[i].mul();
         }
     }
