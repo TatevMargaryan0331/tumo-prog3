@@ -15,6 +15,10 @@ app.get("/", function (req, res) {
     res.redirect("index.html");
 });
 
+app.get("/storm", stormFunction, (req, res) => {
+    return res.sendStatus(200);
+});
+
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
@@ -28,6 +32,72 @@ grassEaterArr = [];
 OmnivoreArr = [];
 OmnivoreEaterArr = [];
 HunterArr = [];
+//storm function
+function stormFunction(next) {
+    let i = 0;
+    console.log('works!!!!!!!');
+    for (let y = 0; y < matrix.length; y++) {
+        for (let x = 0; x < matrix[y].length; x++) {
+            while (i < 20) {
+                let water = new Water(x, y, 6);
+                waterArr.push(water);
+
+                let grass = new Grass(x, y, 1);
+                grassArr.push(grass);
+                ++i;
+            }
+        }
+    }
+    for (let i =0; i < 10; i++) {
+        HunterArr[i]?.die();
+    }
+    for (let i =0; i < 10; i++) {
+        OmnivoreArr[i]?.die();
+    }
+    for (let i =0; i < 10; i++) {
+        OmnivoreEaterArr[i]?.die();
+    }
+    io.sockets.emit("my_matrix", matrix);
+    return next;
+}
+function Statistic() {
+    const statistic = [
+        {
+            kerpar: "Grass",
+            count: grassArr.length,
+        },
+        {
+            kerpar: "GrassEater",
+            count: grassEaterArr.length,
+        },
+        {
+            kerpar: "Omnivore",
+            count: OmnivoreArr.length,
+        },
+        {
+            kerpar: "OmnivoreEater",
+            count: OmnivoreEaterArr.length,
+        },
+        {
+            kerpar: "Hunter",
+            count: HunterArr.length,
+        },
+        {
+            kerpar: "Water",
+            count: waterArr.length,
+},
+];
+    console.log(statistic);
+    statisticFull.push(statistic);
+    const filePath = __dirname + "/statistics.json";
+    fs.writeFile(filePath, JSON.stringify(statisticFull), "utf-8", (err) => {
+        if (!err) {
+            console.log("Statistic file updated!");
+        }
+    });
+    io.sockets.emit("statistic", statistic);
+}
+
 weather = 1;
 
 function kerparner(qanak, kerpar) {
@@ -142,21 +212,20 @@ function StartGame() {
     io.sockets.emit("my_matrix", matrix);
 
 }
-
 generateMatrix();
 creatObjects();
-setInterval(Statistic, 1000);
-setInterval(StartGame, 1000);
-setInterval(ChangeWeather, 5000);
+setInterval(Statistic, 10000);
+setInterval(StartGame, 10000);
+setInterval(ChangeWeather, 10000);
 
 io.on('connection', function (socket) {
     socket.emit("my_matrix", matrix);
 });
 
+
 server.listen(3000, function () {
     console.log("Game is running on port 3000");
 });
-
 
 function ChangeWeather() {
     if (weather == 1) {
@@ -174,41 +243,4 @@ function ChangeWeather() {
     io.sockets.emit("weather", weather);
 }
 
-function Statistic() {
-    const statistic = [
-      {
-        kerpar: "Grass",
-        count: grassArr.length,
-      },
-      {
-        kerpar: "GrassEater",
-        count: grassEaterArr.length,
-      },
-      {
-        kerpar: "Omnivore",
-        count: OmnivoreArr.length,
-      },
-      {
-        kerpar: "OmnivoreEater",
-        count: OmnivoreEaterArr.length,
-      },
-      {
-        kerpar: "Hunter",
-        count: HunterArr.length,
-      },
-      {
-        kerpar: "Water",
-        count: waterArr.length,
-      },
-    ];
-    console.log(statistic);
-    statisticFull.push(statistic);
-    const filePath = __dirname + "/statistics.json";
-    fs.writeFile(filePath, JSON.stringify(statisticFull), "utf-8", (err) => {
-        if (!err) {
-            console.log("Statistic file updated!");
-        }
-    });
-    io.sockets.emit("statistic", statistic);
 
-}

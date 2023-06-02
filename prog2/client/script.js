@@ -28,9 +28,17 @@ socket.on("weather", ChangeWeather)
 socket.on("statistic", statisticValue)
 var docWeather = document.getElementById("docWeather");
 var WeatherPic = document.getElementById("WeatherPic");
-const ctx = document.getElementById('myChart');
+const chart = document.getElementById('chart');
 var StatValue = document.getElementById("StatValue");
+const stormButton = document.querySelector("#storm");
+const updateStatsButton = document.querySelector("#updateStats");
 
+updateStatsButton.addEventListener("click", () => {
+    window.location.reload();
+});
+stormButton.addEventListener("click",() => {
+    return fetch("http://localhost:3000/storm");
+});
 function setup() {
     frameRate(5);
     createCanvas(500, 500);
@@ -94,13 +102,14 @@ function statisticValue(statistic) {
         text += "There are " + statisticElement.count + " " + statisticElement.kerpar + ". ";
     }
     StatValue.innerText = text;
-    new Chart(ctx, {
+    new Chart(chart, {
         type: 'bar',
         data: {
             labels: statisticKerpar,
             datasets: [{
-                label: '# of Votes',
+                label: 'count',
                 data: statisticCount,
+                backgroundColor: 'lightgreen',
                 borderWidth: 1
             }]
         },
@@ -109,6 +118,10 @@ function statisticValue(statistic) {
                 y: {
                     beginAtZero: true
                 }
+            },
+            layout: {
+                autoPadding: false,
+                padding: 0,
             }
         }
     });

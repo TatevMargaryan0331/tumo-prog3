@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -21,22 +22,18 @@
 </head>
 
 <body>
+
     <div class="main" id="main">
         <img id="WeatherPic"
-        src="https://media.cntraveler.com/photos/5ea9df878abbf81d02aeae0b/4:3/w_5352,h_4014,c_limit/Kawachi-Fuji-Garden-wisteria-GettyImages-684691336.jpg"
-        style="width:300px;height:150px;">
+        src="https://media.cntraveler.com/photos/5ea9df878abbf81d02aeae0b/4:3/w_5352,h_4014,c_limit/Kawachi-Fuji-Garden-wisteria-GettyImages-684691336.jpg">
         <h1 id="docWeather" style="color: #59d95f;">Spring</h1>
-        <h2 id="StatValue"></h2>
-        <div>
-            <canvas id="grassChart"></canvas>
-            <canvas id="grassEaterChart"></canvas>
-            <canvas id="omnivoreChart"></canvas>
-            <canvas id="omnivoreEaterChart"></canvas>
-            <canvas id="hunterChart"></canvas>
-            <canvas id="waterChart"></canvas>
+        <h2 class="title__text" id="StatValue"></h2>
+        <button id="storm">Let storm</button>
+        <button id="updateStats">Update chart stats</button>
+        <div class="canvas_div">
+            <canvas id="chart" class="chart"></canvas>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
-
 </html>

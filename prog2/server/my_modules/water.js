@@ -1,4 +1,5 @@
 var LivingCreature = require("./livingCreature")
+const { random } = require("./helpers");
 
 module.exports = class Water extends LivingCreature {
     mul() {
