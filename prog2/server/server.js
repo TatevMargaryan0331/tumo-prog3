@@ -49,13 +49,13 @@ function stormFunction(next) {
         }
     }
     for (let i =0; i < 10; i++) {
-        HunterArr[i]?.die();
+        HunterArr[i].die();
     }
     for (let i =0; i < 10; i++) {
-        OmnivoreArr[i]?.die();
+        OmnivoreArr[i].die();
     }
     for (let i =0; i < 10; i++) {
-        OmnivoreEaterArr[i]?.die();
+        OmnivoreEaterArr[i].die();
     }
     io.sockets.emit("my_matrix", matrix);
     return next;
@@ -214,9 +214,9 @@ function StartGame() {
 }
 generateMatrix();
 creatObjects();
-setInterval(Statistic, 10000);
-setInterval(StartGame, 10000);
-setInterval(ChangeWeather, 10000);
+setInterval(Statistic, 1000);
+setInterval(StartGame, 1000);
+setInterval(ChangeWeather, 1000);
 
 io.on('connection', function (socket) {
     socket.emit("my_matrix", matrix);

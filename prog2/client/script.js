@@ -109,7 +109,7 @@ function statisticValue(statistic) {
             datasets: [{
                 label: 'count',
                 data: statisticCount,
-                backgroundColor: 'lightgreen',
+                backgroundColor: ['#baffc9', '#ffffba', '#ffb3ba', '#aa6f73', '#aa6f73', '#bae1ff'],
                 borderWidth: 1
             }]
         },
